@@ -19,14 +19,19 @@ func SumHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	sum := 0
-	for _, num := range numbers.Numbers {
-		sum += num
-	}
+	sum := sumFunc(numbers.Numbers)
 
 	fmt.Printf("Sum: %d", sum)
 
 	message := "Sum:" + strconv.Itoa(sum) + " User:" + numbers.User + "\n"
 
 	fmt.Fprintf(w, "Message: %s", message)
+}
+
+func sumFunc(arr []int) int {
+	if len(arr) == 1 {
+		return arr[0]
+	}
+
+	return arr[0] + sumFunc(arr[1:])
 }
