@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strconv"
 )
 
 func SumHandler(w http.ResponseWriter, r *http.Request) {
@@ -23,9 +22,15 @@ func SumHandler(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Printf("Sum: %d", sum)
 
-	message := "Sum:" + strconv.Itoa(sum) + " User:" + numbers.User + "\n"
+	//message := "Sum:" + strconv.Itoa(sum) + " User:" + numbers.User + "\n"
 
-	fmt.Fprintf(w, "Message: %s", message)
+	response := map[string]interface{}{
+		"sum":   sum,
+		"user":  numbers.User,
+		"error": nil,
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
 }
 
 func sumFunc(arr []int) int {
