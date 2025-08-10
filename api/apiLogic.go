@@ -12,13 +12,18 @@ func SumHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 
 		jsonRequest, _ := json.Marshal(requestParams)
-
 		fmt.Println("got error:", err.Error(), http.StatusBadRequest, "Request:", string(jsonRequest))
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	sum := sumFunc(requestParams.Numbers)
+	// Convert numbers to int64 for processing
+	numbers := make([]int64, len(requestParams.Numbers))
+	for i, num := range requestParams.Numbers {
+		numbers[i] = int64(num)
+	}
+
+	sum := sumFunc(numbers)
 
 	fmt.Printf("Sum: %d", sum)
 
@@ -51,6 +56,16 @@ func DiffHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+
+	max := int64(requestParams.MaxNumber)
+
+	for _, val := range requestParams.Numbers {
+		if int64(val) > max {
+			max = int64(val)
+		}
+	}
+
+	
 
 	diff := diffFunc(requestParams.MaxNumber, requestParams.Numbers)
 
